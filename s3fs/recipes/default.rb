@@ -6,6 +6,7 @@ end
 remote_file "/tmp/fuse-#{ node[:fuse][:version] }.tar.gz" do
   source "http://downloads.sourceforge.net/project/fuse/fuse-2.X/#{ node[:fuse][:version] }/fuse-#{ node[:fuse][:version] }.tar.gz"
   mode 0644
+  checksum node[:fuse][:checksum]
 end
 
 bash "install fuse" do
@@ -25,6 +26,7 @@ end
 remote_file "/tmp/s3fs-#{ node[:s3fs][:version] }.tar.gz" do
   source "http://s3fs.googlecode.com/files/s3fs-#{ node[:s3fs][:version] }.tar.gz"
   mode 0644
+  checksum node[:s3fs][:checksum]
 end
 
 bash "install s3fs" do
@@ -35,8 +37,8 @@ bash "install s3fs" do
   ./configure --prefix=/usr
   make
   sudo make install
-  sudo mkdir -p /mnt/#{ node[:s3][:bucket] }
-  sudo bash -c 'export AWSACCESSKEYID=#{ node[:access_key] }; export AWSSECRETACCESSKEY=#{ node[:secret_key] }; s3fs #{ node[:s3][:bucket] } /mnt/#{ node[:s3][:bucket] } -o allow_other'
+#  sudo mkdir -p /mnt/#{ node[:s3][:bucket] }
+#  sudo bash -c 'export AWSACCESSKEYID=#{ node[:access_key] }; export AWSSECRETACCESSKEY=#{ node[:secret_key] }; s3fs #{ node[:s3][:bucket] } /mnt/#{ node[:s3][:bucket] } -o allow_other'
   EOH
 
   not_if { File.exists?("/usr/bin/s3fs") }
